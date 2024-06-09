@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  location_db:
+    image: mysql:latest
+    container_name: location_db
+    restart: always
+    networks:
+      - hdv_network
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+      MYSQL_RANDOM_ROOT_PASSWORD: false
+      MYSQL_USER: sa
+      MYSQL_PASSWORD: 1
+      MYSQL_DATABASE: db_location
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - location-mysql-data:/var/lib/mysql
+
+  location_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: location_service
+    depends_on:
+      - location_db
+    ports:
+      - "3003:3003"
+    networks:
+      - hdv_network
+    environment:
+      IP: location_service
+      PORT: 3003
+      DB_IP: location_db
+      DB_PORT: 3306
+      DB_DIALECT: mysql
+      DB_NAME: db_location
+      DB_USER: sa
+      DB_PASS: 1
+      DB_GEN: 1
+
+networks:
+  hdv_network:
+    driver: bridge
+volumes:
+  location-mysql-data:
