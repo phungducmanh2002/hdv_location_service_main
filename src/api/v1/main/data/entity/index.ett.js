@@ -8,10 +8,10 @@ const PRVETT = require("./province.ett");
 const path = require("path");
 const fs = require("fs").promises;
 
-PRVETT.hasOne(DistrictETT, { foreignKey: "idProvince" });
+PRVETT.hasMany(DistrictETT, { foreignKey: "idProvince" });
 DistrictETT.belongsTo(PRVETT, { foreignKey: "idProvince" });
 
-DistrictETT.hasOne(CommuneETT, { foreignKey: "idDistrict" });
+DistrictETT.hasMany(CommuneETT, { foreignKey: "idDistrict" });
 CommuneETT.belongsTo(DistrictETT, { foreignKey: "idDistrict" });
 
 const DB_GEN = FileHelper.getEnv("DB_GEN");
