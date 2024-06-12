@@ -1,5 +1,3 @@
-const LCTDT = require("../../../../../../data");
-const DBConfig = require("../../../config/db.config");
 const SQLZConfig = require("../../../config/sequelize.config");
 const FileHelper = require("../../../helper/file.helper");
 const CommuneETT = require("./commune.ett");
@@ -13,6 +11,12 @@ DistrictETT.belongsTo(PRVETT, { foreignKey: "idProvince" });
 
 DistrictETT.hasMany(CommuneETT, { foreignKey: "idDistrict" });
 CommuneETT.belongsTo(DistrictETT, { foreignKey: "idDistrict" });
+
+const provinceFilePath = path.join(__dirname, "data", "province.json");
+const districtFilePath = path.join(__dirname, "data", "district.json");
+const communeFilePath = path.join(__dirname, "data", "commune.json");
+
+console.log(provinceFilePath);
 
 const DB_GEN = FileHelper.getEnv("DB_GEN");
 class IDXEtt {
@@ -36,17 +40,17 @@ class IDXEtt {
     }
   }
   static async insertPRVData() {
-    const data = await fs.readFile(`${LCTDT.getPath()}\\province.json`, "utf8");
+    const data = await fs.readFile(provinceFilePath, "utf8");
     const datajson = JSON.parse(data);
     await PRVETT.bulkCreate(datajson);
   }
   static async inserDTData() {
-    const data = await fs.readFile(`${LCTDT.getPath()}\\district.json`, "utf8");
+    const data = await fs.readFile(districtFilePath, "utf8");
     const datajson = JSON.parse(data);
     await DistrictETT.bulkCreate(datajson);
   }
   static async insertCMNData() {
-    const data = await fs.readFile(`${LCTDT.getPath()}\\commune.json`, "utf8");
+    const data = await fs.readFile(communeFilePath, "utf8");
     const datajson = JSON.parse(data);
     await CommuneETT.bulkCreate(datajson);
   }
